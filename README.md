@@ -3,7 +3,7 @@ Wilson Yan<sup>1,2</sup>, Andrew Brown<sup>1</sup>, Pieter Abbeel<sup>2</sup>, R
 
 <sup>1</sup>GenAI, Meta, <sup>2</sup> UC Berkeley
 
-![teaser](final_videos/teaser.svg)
+![teaser](videos/teaser.svg)
 
 ## VideoEdit Benchmarking Data
 To download the VideoEdit evaluation dataset in a local directory as ``` ${DIR} ```, run
