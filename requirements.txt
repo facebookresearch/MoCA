@@ -1,0 +1,7 @@
+numpy
+imageio[ffmepg]
+tqdm
+ffmpeg-python
+Pillow
+gdown
+pandas

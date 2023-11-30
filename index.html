@@ -1,0 +1,497 @@
+<!DOCTYPE HTML>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Motion-Conditioned Image Animation for Video Editing</title>
+
+  <style type="text/css"> 
+  </style>
+
+  <meta name="author" content="Wilson Yan">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <style>
+      /* Apply styles to the container div */
+      .center-container {
+        text-align: center; /* Center text within the container */
+      }
+  
+      /* Apply styles to the paragraph inside the container */
+      .center-container p {
+        display: inline-block; /* Make the paragraph a block element */
+        font-size: 24px;
+        font-family: "Gill Sans", sans-serif;
+      }
+
+
+      .method-container p {
+        display: inline-block;
+        font-size: 18px;
+      }
+
+      .red-text {
+          color: red; /* Text with class 'red-text' set to red */
+        }
+    </style>
+
+</head>
+
+<body>
+  <div class="jumbotron jumbotron-fluid text-center">
+    <div class="container"></div>
+    <h2>
+    Motion-Conditioned Image Animation for Video Editing
+    </h2>
+    <br>
+    <p class="authors">
+      <a href="https://wilson1yan.github.io/">Wilson Yan</a>, 
+      <a href="https://scholar.google.com/citations?user=WXUm4uUAAAAJ&hl=en">Andrew Brown</a>, 
+      <a href="https://people.eecs.berkeley.edu/~pabbeel/">Pieter Abbeel</a>,
+      <a href="https://rohitgirdhar.github.io/">Rohit Girdhar</a>,
+      <a href="https://scholar.google.com/citations?user=X0EXfT8AAAAJ&hl=en">Samaneh Azadi</a>
+    </p>
+    <div class="btn-group" role="group" aria-label="Top menu">
+      <a class="btn btn-primary" href="" role="button">Paper</a>
+      <a class="btn btn-primary" href="" role="button">Dataset Code</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="section">
+      <h2> Abstract </h2>
+      <hr>
+      <p>
+      We introduce MoCA, a <b>Mo</b>tion-<b>C</b>onditioned Image <b>A</b>nimation approach for video editing.   
+      It leverages a simple decomposition of the video editing problem into image editing followed by 
+      motion-conditioned image animation. Furthermore, given the lack of robust evaluation datasets for video editing, 
+      we introduce a new  benchmark that measures edit capability across a wide variety of tasks, such as object 
+      replacement, background changes, style changes, and motion edits. In addition, we present a comprehensive 
+      human evaluation of the latest video editing methods along with \ours, on our proposed benchmark. MoCA establishes 
+      a new state-of-the-art, outperforming notable recent approaches including Dreamix (63%), MasaCtrl (75%), 
+      and Tune-A-Video (72%), with especially significant improvements for motion edits.
+      </p>
+    </div>
+
+    <!-- style: 27, 60, 83, 95 ,113
+    background: 41, 53, 68, 133
+    object: 39, 57, 88, 223
+    multi-spatial: 78, 86
+    motion: 162, 175, 184, 226, 253, 255, 258
+    multi-motion: 164, 197, 204, 218, 230, 246, 250, 260 -->
+
+    <div class="section">
+      <h2>Style Edits</h2>
+      <div style="width: 100%; overflow: hidden;">
+        <div style="width: 49%; float: left;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+              <source src="./videos/000083.mp4" type="video/mp4"> 
+              </video>
+              <div class="center-container">
+                  <p>Several goldfish swim in a tank.<br> &#x2193; <br> Several goldfish swim in a tank, <span class="red-text">impressionist style.</span></p>
+              </div>
+        </div>
+        <div style="width: 2%;"> </div>
+        <div style="width: 49%; float: right;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/000060.mp4" type="video/mp4">
+            </video>
+              <div class="center-container">
+                  <p>Three cows graze together in a green pasture. <br> &#x2193; <br> Three cows graze together in a green pasture, <span class="red-text">pointilism style.</span></p>
+              </div>
+        </div>
+      </div>
+      <hr>
+      <h2>Background Edits</h2>
+      <div style="width: 100%; overflow: hidden;">
+        <div style="width: 49%; float: left;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+              <source src="./videos/000041.mp4" type="video/mp4"> 
+              </video>
+              <div class="center-container">
+                  <p>A ship sails on the sea during sunset.  <br> &#x2193; <br> A ship sails on the <span class="red-text">lunar surface</span> during sunset.</p>
+              </div>
+        </div>
+        <div style="width: 2%;"> </div>
+        <div style="width: 49%; float: right;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/000133.mp4" type="video/mp4">
+            </video>
+              <div class="center-container">
+                  <p>An airplane flies through the blue sky leaving a contrail behind it. <br> &#x2193; <br> An airplane flies <span class="red-text">over the Taj Mahal </span>leaving a contrail behind it.</p>
+              </div>
+        </div>
+      </div>
+      <hr>
+      <h2>Object Edits</h2>
+      <div style="width: 100%; overflow: hidden;">
+        <div style="width: 49%; float: left;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+              <source src="./videos/000057.mp4" type="video/mp4"> 
+              </video>
+              <div class="center-container">
+                  <p>A beautiful lotus in river water on a rainy day. <br> &#x2193; <br> A beautiful <span class="red-text">poppy flower</span> in river water on a rainy day.</p>
+              </div>
+        </div>
+        <div style="width: 2%;"> </div>
+        <div style="width: 49%; float: right;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/000088.mp4" type="video/mp4">
+            </video>
+              <div class="center-container">
+                  <p> A static shot of red roses in sunlight, gently swaying in the breeze. <br> &#x2193; <br> A static shot of <span class="red-text">rainbow</span> roses in sunlight, gently swaying in the breeze.</p>
+              </div>
+        </div>
+      </div>
+      <hr>
+      <h2>Multi-Spatial Edits (Combo of style / background / object edits)</h2>
+      <div style="width: 100%; overflow: hidden;">
+        <div style="width: 49%; float: left;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+              <source src="./videos/000078.mp4" type="video/mp4"> 
+              </video>
+              <div class="center-container">
+                  <p> The sun setting with clouds moving around it. <br> &#x2193; <br> The <span class="red-text">moon </span> setting with clouds moving around it, <span class="red-text">reflecting on a flooded road.</span></p>
+              </div>
+        </div>
+        <div style="width: 2%;"> </div>
+        <div style="width: 49%; float: right;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/000086.mp4" type="video/mp4">
+            </video>
+              <div class="center-container">
+                  <p> Rain falling on a stone pathway in super slow motion. <br> &#x2193; <br> <span class="red-text">Snow</span> falling on a fantasy landscape in super slow motion, <span class="red-text">with dramatic lighting.</span></p>
+              </div>
+        </div>
+      </div>
+      <hr>
+      <h2>Motion Edits</h2>
+      <div style="width: 100%; overflow: hidden;">
+        <div style="width: 49%; float: left;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+              <source src="./videos/000162.mp4" type="video/mp4"> 
+              </video>
+              <div class="center-container">
+                  <p> Riding a boat over the ocean<br> &#x2193; <br> <span class="red-text">Huge waves crash while </span>riding a boat over the ocean</p>
+              </div>
+        </div>
+        <div style="width: 2%;"> </div>
+        <div style="width: 49%; float: right;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/000184.mp4" type="video/mp4">
+            </video>
+              <div class="center-container">
+                  <p> A duckling looking for food in grass <br> &#x2193; <br> <span class="red-text">Zooming out from </span>a duckling looking for food in grass</p>
+              </div>
+        </div>
+      </div>
+      <hr>
+      <h2>Multi-Motion Edits (Combo of motion + spatial edits)</h2>
+      <div style="width: 100%; overflow: hidden;">
+        <div style="width: 49%; float: left;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+              <source src="./videos/000204.mp4" type="video/mp4"> 
+              </video>
+              <div class="center-container">
+                  <p> A bright pink flower<br> &#x2193; <br> <span class="red-text">Timelapse of an orange lily fully blooming</span></p>
+              </div>
+        </div>
+        <div style="width: 2%;"> </div>
+        <div style="width: 49%; float: right;">
+            <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/000230.mp4" type="video/mp4">
+            </video>
+              <div class="center-container">
+                  <p> Fresh apricots hanging off a tree <br> &#x2193; <br> <span class="red-text">Ripe apples fall off </span>a tree</p>
+              </div>
+        </div>
+      </div>
+      <br>
+      
+      <h2>Comparisons Against Baselines</h2>
+
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">        
+            <source src="./videos/comparisons/FPU3MkaT_9k_00_04.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A panda sitting down and eating from a pile of bamboo &#x2192; A panda sitting down and <span class='red-text'>playing in</span> a pile of <span class='red-text'>colorful ribbons</span></p>
+              </div>
+        </div>
+              <hr>
+
+      <div style="width: 100%; overflow: hidden;">
+
+
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/nA1jBUEzgSQ_00_03.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A duck swimming on water &#x2192; A duck <span class='red-text'>shaking wings</span> on water</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <hr>
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/sharks-swimming_03.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>Two grey sharks swim in the blue ocean on a coral reef. &#x2192; Two grey sharks swim in the blue ocean on a coral <span class='red-text'>reef, surrounded by various colorful fish.</span></p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/audi-snow-trail_02.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>An audi q7 goes on a snow trail. &#x2192; An audi q7 goes on a <span class='red-text'>desert</span> trail.</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/wNITe1mUNxw_00_01.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A white jeep driving down a gravel road &#x2192; A white jeep driving down a <span class='red-text'>dirt</span> road</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/T0DV3BriqZs_00_00.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A turtle laying on a green floor &#x2192; A turtle laying on a green floor <span class='red-text'>retracts into its shell</span></p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/O7HE0dvNx8c_00_04.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A scene of a calm lake &#x2192; A scene of a lake <span class='red-text'>with crashing waves</span></p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/setting-sun_00.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>The sun setting with clouds moving around it. &#x2192; The sun setting with clouds moving around <span class='red-text'>it, 2d vector animation.</span></p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/ferris-wheel-timelapse_02.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A time lapsed video of a ferris wheel moving. &#x2192; A <span class='red-text'>time-lapsed</span> video of a ferris wheel <span class='red-text'>moving with</span> a <span class='red-text'>sunset in the background.</span></p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/nA1jBUEzgSQ_00_04.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A duck swimming on water &#x2192; A duck swimming on water <span class='red-text'>with big waves</span></p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/zYBq6V-3BpM_01_00.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>Fresh apricots hanging off a tree &#x2192; <span class='red-text'>Ripe</span> apricots <span class='red-text'>fall</span> off a tree</p>
+              </div>
+        </div>
+        <hr>
+
+
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/WmmGvnuAF18_00_02.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A duckling looking for food in grass &#x2192; A duckling <span class='red-text'>jumping on a pile of leaves</span></p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/cows-grazing_01.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>Three cows graze together in a green pasture. &#x2192; Three <span class='red-text'>sheep</span> graze together in a green pasture.</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/rreEpKo3o_Y_00_00.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A bright pink flower &#x2192; <span class='red-text'>Timelapse of a</span> bright pink flower <span class='red-text'>fully blooming</span></p>
+              </div>
+        </div>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">        
+            <source src="./videos/comparisons/nA1jBUEzgSQ_00_00.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A duck swimming on water &#x2192; A duck <span class='red-text'>dunks its head underwater</span></p>
+              </div>
+        </div>
+
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/ship-sailing_00.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A ship sails on the sea during sunset.  &#x2192; A ship sails on the sea during <span class='red-text'>sunset, 2d vector art.</span></p>
+              </div>
+        </div>
+        <hr>
+
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/6mRgGoa08AQ_00_04.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A bird sitting on a rock in a river &#x2192; A <span class='red-text'>red cardinal takes flight off</span> a rock</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/pLAHIjC8MIs_00_00.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A boar sniffs the dirt looking for food &#x2192; A boar <span class='red-text'>digs a hole in</span> the <span class='red-text'>ground</span></p>
+              </div>
+        </div>
+        <hr>
+
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/raindrops_01.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>Rain falling on a stone pathway in super slow motion. &#x2192; <span class='red-text'>Snow</span> falling on a stone pathway in super slow motion.</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/UmtZLpHPRCs_00_01.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>Bright red leaves on a tree during autumn &#x2192; Bright red leaves <span class='red-text'>fall off</span> a tree during autumn</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/nA1jBUEzgSQ_00_01.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A duck swimming on water &#x2192; A <span class='red-text'>swan</span> swimming on water</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/q4yHz3ysMUk_00_01.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>Goldfish swimming around in a lake &#x2192; <span class='red-text'>Blue fish</span> swimming around in a lake</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/UmtZLpHPRCs_00_00.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>Bright red leaves on a tree during autumn &#x2192; Bright red leaves on a tree during <span class='red-text'>autumn, windy day, rustling</span> leaves</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/O7HE0dvNx8c_00_01.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A scene of a calm lake &#x2192; A scene of a <span class='red-text'>left to right pan</span> of a calm lake</p>
+              </div>
+        </div>
+        <hr>
+
+
+        <hr>
+
+        <div style="width: 100%; overflow: hidden;">
+          <video width="100%" onloadstart="this.playbackRate = 0.75" autoplay loop playsinline muted="">				
+            <source src="./videos/comparisons/O7HE0dvNx8c_00_03.mp4" type="video/mp4"> 
+            </video>
+              <div class="center-container">
+                  <p>A scene of a calm lake &#x2192; A <span class='red-text'>time-lapse</span> of a calm lake</p>
+              </div>
+        </div>
+        <hr>
+</body>
+</html>
